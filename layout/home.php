@@ -1,6 +1,6 @@
     <div class="content">
         <div class="user-info">
-           
+            <p>Tài khoản: <b>Huỳnh Gia Kiệt</b></p>
             <div class="icons">
                 <span>&#128276;</span> <!-- Settings Icon -->
                 <span>&#128276;</span> <!-- Logout Icon -->
