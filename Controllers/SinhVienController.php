@@ -1,5 +1,5 @@
 <?php
-class SinhVien
+class SinhVienController
 {
     protected $conn;
 
@@ -38,15 +38,45 @@ class SinhVien
         $result = $this->conn->query($sql);
         return $result;
     }
+     public function TaoMaSoSinhVien($maLop) {
+        $sqlMaKhoa = "SELECT MaKhoa FROM lop WHERE MaLop = '$maLop'";
+        $resultMaKhoa = $this->conn->query($sqlMaKhoa);
+        $rowKhoa = $resultMaKhoa->fetch_assoc();
+        $maKhoa = $rowKhoa['MaKhoa'];
+
+        // Lấy 2 ký tự đầu (năm hiện tại - năm thành lập trường)
+        $namHienTai = date("Y");
+        $namThanhLap = 1959;
+        $prefixNam = str_pad($namHienTai - $namThanhLap, 2, "0", STR_PAD_LEFT); // VD: 65
+
+        // Lấy 2 ký tự đầu của mã khoa
+        $prefixKhoa = explode('-', $maKhoa)[0]; // VD: 01,02,...
+
+        // Lấy 4 ký tự cuối (mã SV cao nhất hiện tại + 1)
+        $sql = "SELECT MaSV FROM sinhvien WHERE MaSV LIKE '$prefixNam$prefixKhoa%' ORDER BY MaSV DESC LIMIT 1";
+        $result = $this->conn->query($sql);
+        $nextId = "0001"; // Mặc định mã mới bắt đầu từ 0001
+        if ($result && $result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $lastMaSV = $row['MaSV']; // VD: 65010001
+            $currentId = substr($lastMaSV, -4); // Lấy 4 ký tự cuối
+            $nextId = str_pad($currentId + 1, 4, "0", STR_PAD_LEFT); // Tăng 1, bổ sung thêm 0 nếu cần
+        }
+
+        return $prefixNam . $prefixKhoa . $nextId; // 
+    }
+
+
     // Hàm thêm sinh viên
     public function ThemSinhVien($maSV, $hoTen, $ngaySinh, $gioiTinh, $diaChi, $email, $sdt, $anhSV, $maLop)
     {
         $sql = "INSERT INTO sinhvien (MaSV, HoTen, NgaySinh, GioiTinh, DiaChi, Email, Sdt, AnhSV, MaLop) VALUES ('$maSV', '$hoTen', '$ngaySinh', '$gioiTinh', '$diaChi', '$email', '$sdt', '$anhSV', '$maLop')";
 
         if ($this->conn->query($sql) === TRUE) {
-            echo "Thêm sinh viên thành công.";
+            header("Location: QuanLyThongTinSinhVien.php");
+            exit;
         } else {
-            echo "Lỗi khi thêm sinh viên: " . $this->conn->error;
+            return "Thêm sinh viên thất bại: " . $this->conn->error;
         }
     }
     // Hàm xóa sinh viên
@@ -57,14 +87,14 @@ class SinhVien
         return $result->fetch_assoc();
     }
     // Hàm sửa sinh viên
-    public function SuaSinhVien($maSV, $hoTen, $ngaySinh, $gioiTinh, $diaChi, $email, $sdt, $maLop)
+    public function SuaSinhVien($maSV, $hoTen, $ngaySinh, $gioiTinh, $diaChi, $email, $sdt, $fileName)
     {
-        $sql = "UPDATE sinhvien SET HoTen='$hoTen', NgaySinh='$ngaySinh', GioiTinh='$gioiTinh', DiaChi='$diaChi', Email='$email', Sdt='$sdt', MaLop='$maLop' WHERE MaSV='$maSV'";
+        $sql = "UPDATE sinhvien SET HoTen='$hoTen', NgaySinh='$ngaySinh', GioiTinh='$gioiTinh', DiaChi='$diaChi', Email='$email', Sdt='$sdt', AnhSV='$fileName' WHERE MaSV='$maSV'";
 
         if ($this->conn->query($sql) === TRUE) {
-            echo "Sửa sinh viên thành công.";
+            return "Sửa sinh viên thành công.";
         } else {
-            echo "Lỗi khi sửa sinh viên: " . $this->conn->error;
+            return "Lỗi khi sửa sinh viên: " . $this->conn->error;
         }
     }
     // Hàm xóa sinh viên
@@ -73,9 +103,9 @@ class SinhVien
         $sql = "DELETE FROM sinhvien WHERE MaSV='$maSV'";
 
         if ($this->conn->query($sql) === TRUE) {
-            echo "Xóa sinh viên thành công.";
+            return "Xóa sinh viên thành công.";
         } else {
-            echo "Lỗi khi xóa sinh viên: " . $this->conn->error;
+            return "Lỗi khi xóa sinh viên: " . $this->conn->error;
         }
     }
     //Tính tổng sinh viên để phân trang

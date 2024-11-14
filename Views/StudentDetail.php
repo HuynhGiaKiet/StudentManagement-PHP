@@ -3,7 +3,7 @@ session_start();
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../Controllers/SinhVienController.php';
 
-$svController = new SinhVien($conn);
+$svController = new SinhVienController($conn);
 
 //lấy mã sinh viên
 $maSV = isset($_GET['MaSV']) ? $_GET['MaSV'] : null;
@@ -28,11 +28,11 @@ $sinhvien = $svController->ChiTietSinhVien($maSV);
                 <li><strong>Ảnh:</strong> <img src="<?php echo '../asset/Images/' . $sinhvien['AnhSV']; ?>" alt="Student Image" width="100" height="100"></li>
             </ul>
             <div class="flex justify-around items-center p-2">
-                <a class="" title="Chỉnh sửa">
-                    <img src="../asset/Images/edit.png" class="h-12">
+                <a href="EditStudent.php?MaSV=<?php echo $sinhvien['MaSV']; ?>" title="Chỉnh sửa">
+                    <img src="../asset/Images/edit.png" class="h-12"/>
                 </a>
-                <a class="" title="Xóa">
-                    <img src="../asset/Images/delete.png" class="h-12">
+                <a href="DeleteStudent.php" title="Xóa">
+                    <img src="../asset/Images/delete.png" class="h-12"/>
                 </a>
             </div>
         </div>
