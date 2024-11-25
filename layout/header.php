@@ -4,7 +4,7 @@ include_once __DIR__ . '/../Controllers/QuanTriController.php';
 $quantriController = new QuanTriController($conn);
 
 if (!isset($_SESSION['User'])) {
-    header('Location: loginPage.php');
+    header('Location: DangNhap.php');
     exit;
 }
 
@@ -13,7 +13,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
     // Gọi hàm logout và kiểm tra nếu logout thành công
     if ($quantriController->logout()) {
         // Nếu logout thành công, chuyển hướng đến trang đăng nhập
-        header('Location: loginPage.php');
+        header('Location: DangNhap.php');
         exit;
     }
 }
@@ -30,7 +30,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
     <script src="../asset/script.js"></script>
 </head>
 <header class="flex justify-between items-center text-center bg-gradient-to-b from-blue-900 via-blue-900 to-blue-700 text-white px-10 h-24">
+    <a href="../Views/AdminPage.php">
         <img src="../asset/Images/NTU.jpg" alt="NTU Logo" class="h-20 rounded-full">
+    </a>
         <div>
             <h1 class="text-2xl font-bold">TRƯỜNG ĐẠI HỌC NHA TRANG</h1>
             <h2 class="text-lg font-medium">HỆ THỐNG TÍCH HỢP THÔNG TIN</h2>
