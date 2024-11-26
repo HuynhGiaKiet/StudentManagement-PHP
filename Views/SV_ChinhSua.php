@@ -8,19 +8,27 @@ $svController = new SinhVienController($conn);
 $khoaController = new KhoaController($conn);
 $lopController = new LopController($conn);
 
+// Lấy danh sách khoa, lớp
+$khoaList = $khoaController->DanhSach();
+$lopList = $lopController->DanhSach();
 
 if (isset($_GET['MaSV'])) {
     $maSV = $_GET['MaSV'];
 }
+
+$sinhvien = $svController->ChiTietSinhVien($maSV);
+$maLop = $sinhvien['MaLop'];
+
+
 
 // Xử lý thêm hoặc cập nhật sinh viên
 if (isset($_POST['LuuSV'])) {
     $maSV = $_POST['maSV'];
     $hoTen = $_POST['hoTen'];
     $ngaySinh = $_POST['ngaySinh'];
+    $email = $svController->EmailTuDong($hoTen,$maLop);
     $gioiTinh = $_POST['gioiTinh'];
     $diaChi = $_POST['diaChi'];
-    $email = $_POST['email'];
     $sdt = $_POST['Sdt'];
     $anhSV = $_FILES['AnhSV'];
     //$maLop = $_POST['lopOption'];
@@ -38,26 +46,21 @@ if (isset($_POST['LuuSV'])) {
         }
         $fileName = strtolower(basename($anhSV['name']));
         $fileName = preg_replace("/[^a-z0-9\.]/", "_", $fileName);
+        $full_path = "../asset/Images/" . $fileName;
+        move_uploaded_file($anhSV['tmp_name'], $full_path);
 
-        $message = $svController->SuaSinhVien($maSV, $hoTen, $ngaySinh, $gioiTinh, $diaChi, $email, $sdt, $fileName);
+        $message = $svController->SuaSinhVien($maSV, $hoTen, $ngaySinh, $gioiTinh, $diaChi, $sdt, $email, $fileName);
     }
 }
-
-// Lấy danh sách khoa, lớp
-$khoaList = $khoaController->DanhSach();
-$lopList = $lopController->DanhSach();
-
-$sinhvien = $svController->ChiTietSinhVien($maSV);
-
 
 ?>
 <?php include_once __DIR__ . "/../layout/header.php"; ?>
 
 <body>
-    <div class="m-4 w-full mx-2 min-h-[520px] ">
+    <div class="m-4 mx-2 min-h-[535px] ">
         <button onclick="window.history.back()" class="px-3 py-2 bg-gray-400">Quay lại</button>
         <div id="" class="flex items-center justify-center">
-            <div class="bg-white p-6 rounded-lg w-max shadow-lg border-2">
+            <div class="w-1/2 bg-white p-6 rounded-lg w-max shadow-lg border-2">
                 <h2 class="text-xl font-bold mb-4 text-center">
                     <?php echo 'Chỉnh sửa thông tin sinh viên'; ?>
                 </h2>
@@ -68,6 +71,12 @@ $sinhvien = $svController->ChiTietSinhVien($maSV);
                         <input type="text" name="maSV" class="w-full px-3 py-2 border rounded-md bg-gray-200"
                                value="<?php echo $maSV; ?>" readonly>
                     </div>
+                    <div class="">
+                        <label class="block font-medium">Mã lớp</label>
+                        <input type="text" name="maLop" class="w-full px-3 py-2 border rounded-md bg-gray-200"
+                               value="<?php echo $sinhvien['MaLop']; ?>" readonly>
+                    </div>
+                    <div></div>
                     <div class="">
                         <label class="block font-medium">Họ Tên</label>
                         <input type="text" name="hoTen" class="w-full px-3 py-2 border rounded-md"
@@ -109,12 +118,10 @@ $sinhvien = $svController->ChiTietSinhVien($maSV);
                         <input type="text" name="Sdt" class="w-full px-3 py-2 border rounded-md"
                                value="<?php echo $sinhvien['SDT']; ?>" required>
                     </div>
-                    <div class="">
+                    <div class="flex col-span-2">
                         <label class="block font-medium">Ảnh</label>
-                        <img src="" alt="Ảnh SV">
-                        <input type="file" accept="image/*" name="AnhSV" class="w-full px-3 py-2 border rounded-md "
-                            required>
-                        
+                        <img class="w-[65.6px]" src="../asset/Images/<?php echo $sinhvien['AnhSV'];?>" alt="Ảnh SV">
+                        <input type="file" accept="image/*" name="AnhSV" class="w-full px-3 py-2 border rounded-md " required>
                     </div>
                     <div class="col-span-3 text-center">
                         <button type="submit" name="LuuSV" value="LuuSV"

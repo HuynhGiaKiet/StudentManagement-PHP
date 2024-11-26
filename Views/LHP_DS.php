@@ -19,7 +19,7 @@ if (isset($_POST['TimKiemLHP'])) {
 <?php include_once __DIR__ . "/../layout/header.php"; ?>
 
 <body>
-    <div class="min-h-[520px] my-6 mx-2 px-4 mt-2">
+    <div class="h-[535px] my-6 mx-2 px-4 mt-2">
         <div class="w-full flex justify-between">
             <button onclick="window.history.back()" class="px-3 py-2 mb-2 bg-gray-400 rounded-xl">Quay lại</button>
             <form action="" method="post">
@@ -29,7 +29,7 @@ if (isset($_POST['TimKiemLHP'])) {
             <a href="LHP_ThemMoi.php"
                 class="px-3 py-2 mb-2 bg-blue-400 rounded-xl cursor-pointer hover:bg-blue-500">Thêm mới</a>
         </div>
-        <div class="py-4 h-[490px] overflow-scroll overflow-x-hidden">         
+        <div class="py-4 h-[490px] overflow-scroll overflow-x-hidden border-t-2">
             <table class="w-3/4 mx-auto bg-white border-2 rounded">
                 <thead>
                     <tr>
@@ -39,6 +39,7 @@ if (isset($_POST['TimKiemLHP'])) {
                         <th class="py-3 px-4 border-b text-left">Địa điểm</th>
                         <th class="py-3 px-4 border-b text-left">Giáo viên</th>
                         <th class="py-3 px-4 border-b text-left">Mã Lớp</th>
+                        <th class="py-3 px-4 border-b text-left"></th>
                     </tr>
                 </thead>
                 <tbody class="overflow-scroll overflow-x-hidden">
@@ -53,8 +54,8 @@ if (isset($_POST['TimKiemLHP'])) {
                                 <td class="py-3 px-4 border-b"><?php echo htmlspecialchars($lhp['DiaDiem']); ?></td>
                                 <td class="py-3 px-4 border-b"><?php echo htmlspecialchars($lhp['HoTen']); ?></td>
                                 <td class="py-3 px-4 border-b"><?php echo htmlspecialchars($lhp['MaLop']); ?></td>
-                                <td class='py-3 px-4 border-b flex'>
-                                <a href='LHP_ChinhSua.php?MaMaLopHocPhan=".$lhp['MaLopHocPhan'] ."' title='Chỉnh sửa'><img src='../asset/Images/edit.png' class='h-12'/></a>
+                                <td class="py-3 px-4 border-b">
+                                    <a href="LHP_ChinhSua.php?MaLHP=<?php echo $lhp['MaLopHocPhan']?>"><img src='../asset/Images/edit.png' class='h-12'/></a>
                                 </td>
                             </tr>
                             <?php
@@ -65,6 +66,7 @@ if (isset($_POST['TimKiemLHP'])) {
                     }
                     ?>
                 </tbody>
+
             </table>
         </div>
     </div>

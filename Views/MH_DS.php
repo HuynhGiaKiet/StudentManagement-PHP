@@ -18,7 +18,7 @@ if (isset($_POST['TimKiemMH'])) {
 
 
 <body>
-    <div class="min-h-[520px] my-6 mx-2 px-4 mt-2">
+    <div class="h-[535px] my-6 px-4 mt-2">
         <div class="w-full flex justify-between">
             <button onclick="window.history.back()" class="px-3 py-2 mb-2 bg-gray-400 rounded-xl">Quay lại</button>
             <form action="" method="post">
@@ -27,7 +27,7 @@ if (isset($_POST['TimKiemMH'])) {
             </form>
             <a href="MH_ThemMoi.php" class="px-3 py-2 mb-2 bg-blue-400 rounded-xl cursor-pointer hover:bg-blue-500">Thêm mới</a>
         </div>
-        <div class="py-4 h-[490px] overflow-scroll overflow-x-hidden">
+        <div class="py-4 h-[490px] overflow-scroll overflow-x-hidden border-t-2">
             <table class="w-3/4 mx-auto bg-white  border-2 rounded">
                 <tr>
                     <th class="py-3 px-4 border-b text-left">STT</th>
